@@ -49,7 +49,6 @@ class Poison:
             for i in range(0,self.trigger_num):
                 poison_patterns = poison_patterns+ self.poison_patterns[i]
         else :
-            print("adversarial ",adversarial_index, "start to poison")
             index_in_adv_list = self.adv_list.index(adversarial_index)
             poison_patterns = self.poison_patterns[index_in_adv_list]
         

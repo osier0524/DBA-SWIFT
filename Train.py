@@ -118,6 +118,8 @@ def run(rank, size):
             start_time = time.time()
             # TODO: if rank is adversary, then poison the data
             if is_adversary(rank, epoch, args.adv_list, args.adv_epoch):
+                if batch_idx == 0:
+                    print(f"rank {rank} starts to poison")
                 data, target, poison_count = poison.get_poison_batch(data, target, rank, False)
                 continue
             # TODO: if rank is benign, then use original code
