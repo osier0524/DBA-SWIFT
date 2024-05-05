@@ -34,8 +34,8 @@ class Poison:
                     new_images[index] = images[index]
                     new_targets[index]= targets[index]
 
-        new_images = new_images.to(self.device)
-        new_targets = new_targets.to(self.device).long()
+        new_images = new_images
+        new_targets = new_targets.long()
         if evaluation:
             new_images.requires_grad_(False)
             new_targets.requires_grad_(False)

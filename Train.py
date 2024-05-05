@@ -121,7 +121,6 @@ def run(rank, size):
                 if batch_idx == 0:
                     print(f"rank {rank} starts to poison")
                 data, target, poison_count = poison.get_poison_batch(data, target, rank, False)
-                continue
             # TODO: if rank is benign, then use original code
 
             # data loading
@@ -276,6 +275,7 @@ if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(description='PyTorch CIFAR10 Training')
     parser.add_argument('--config', type=str, help='Path to the configuration file')
+    parser.add_argument('--name', type=str, help='test case name')
     parser.add_argument('--randomSeed', type=int, help='random seed')
     cmd_args = parser.parse_args()
 
@@ -283,6 +283,8 @@ if __name__ == "__main__":
         config = yaml.safe_load(f)
     args = ConfigObject(config)
 
+    if cmd_args.name is not None:
+        args.name = cmd_args.name
     if cmd_args.randomSeed is not None:
         args.randomSeed = cmd_args.randomSeed
 
