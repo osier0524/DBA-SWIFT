@@ -30,3 +30,4 @@ mpirun -np 20 python Train.py --config Config/swift-iid.yaml --randomSeed 100
 
 # 40 processes
 mpirun --host rhcsnero-1:48 -np 40 python Train.py --config Config/swift-iid-40.yaml --randomSeed 100
+mpirun --host rhcsnero-1:48 -np 40 python Train.py --config Config/swift-iid-consec.yaml --randomSeed 100
