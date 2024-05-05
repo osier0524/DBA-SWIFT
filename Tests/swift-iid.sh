@@ -25,5 +25,8 @@ mpirun -np 8 -oversubscribe --allow-run-as-root python $swift_path --config $yam
 
 mpirun -np 16 python Train.py --config Config/swift-iid.yaml --name swift-iid-test1-16W-no_mem-multi-200 --randomSeed 100
 
+# 20
+mpirun -np 20 python Train.py --config Config/swift-iid.yaml --randomSeed 100
+
 # 40 processes
 mpirun --host rhcsnero-1:48 -np 40 python Train.py --config Config/swift-iid-40.yaml --randomSeed 100
