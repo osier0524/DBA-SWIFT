@@ -32,7 +32,7 @@ def run(rank, size):
     np.random.seed(args.randomSeed)
 
     # select neural network model
-    num_class = 10
+    num_class = 11
     model = Resnet.ResNet(args.resSize, num_class)
 
     # split up GPUs
