@@ -237,9 +237,12 @@ def partition_dataset(rank, size, comm, val_split, args):
             print('==> load poison test data')
         test_classes_dict = build_classes_dict(t1)
         all_range = list(range(len(t1)))
-        for image_idx in test_classes_dict[args.poison_label_swap]:
-            if image_idx in all_range:
-                all_range.remove(image_idx)
+        # in domain
+        if args.poison_label_swap < 10:
+            for image_idx in test_classes_dict[args.poison_label_swap]:
+                if image_idx in all_range:
+                    all_range.remove(image_idx)
+        # out of domain, don't need to remove
         poison_test_loader = torch.utils.data.DataLoader(t1, batch_size=64, shuffle=False,
                                                          sampler=torch.utils.data.SubsetRandomSampler(all_range))
         comm.Barrier()

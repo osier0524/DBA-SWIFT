@@ -42,7 +42,7 @@ class Poison:
         return new_images,new_targets,poison_count
     
 
-    def add_pixel_pattern(self,ori_image,adversarial_index):
+    def add_pixel_pattern(self, ori_image, adversarial_index):
         image = copy.deepcopy(ori_image)
         poison_patterns= []
         if adversarial_index==-1:

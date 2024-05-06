@@ -87,6 +87,11 @@ def run(rank, size):
     losses = AverageMeter()
     top1 = AverageMeter()
 
+    for i in range(size):
+        if rank == i:
+            recorder.save_neighbors(communicator.neighbor_list)
+        MPI.COMM_WORLD.Barrier()
+
     if args.noniid:
         d_epoch = 200
     else:
@@ -173,7 +178,7 @@ def run(rank, size):
         test_time = time.time() - t
 
         # evaluate accuracy on poison test data
-        poison_acc = test_accuracy_poison(model, poison, poison_test_loader)
+        poison_acc = test_accuracy_poison(model, poison, poison_test_loader, adv_index=args.adv_list[0])
 
         # evaluate validation accuracy at the end of each epoch
         # val_acc = test_accuracy(model, val_loader)

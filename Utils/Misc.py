@@ -33,6 +33,7 @@ class Recorder(object):
         self.record_poisonacc = list()
         self.record_testloss = list()
         self.total_record_timing = list()
+        self.record_neighbor_list = list()
         self.args = args
         self.rank = rank
         self.saveFolderName = args.outputFolder + '/' + self.args.name + '-' + str(self.args.graph) + '-' \
@@ -50,6 +51,12 @@ class Recorder(object):
         self.record_losses.append(losses)
         # self.record_valacc.append(val_acc)
         self.record_testloss.append(test_loss)
+    
+    def save_neighbors(self, neighbor_list):
+        for n in neighbor_list:
+            self.record_neighbor_list.append(n)
+        
+        np.savetxt(self.saveFolderName + '/r' + str(self.rank) + '-neighbors.log', self.record_neighbor_list, delimiter=',')
 
     def save_to_file(self):
         np.savetxt(self.saveFolderName + '/r' + str(self.rank) + '-epoch-time.log', self.record_timing, delimiter=',')
@@ -112,11 +119,11 @@ def test_loss(model, test_loader, criterion):
     return top1.avg
 
 # test accuracy with poison
-def test_accuracy_poison(model, poison, poison_test_loader):
+def test_accuracy_poison(model, poison, poison_test_loader, adv_index=-1):
     model.eval()
     top1 = AverageMeter()
     for batch_idx, (inputs, targets) in enumerate(poison_test_loader):
-        inputs, targets, poison_num = poison.get_poison_batch(inputs, targets, evaluation=True)
+        inputs, targets, poison_num = poison.get_poison_batch(inputs, targets, adversarial_index=adv_index, evaluation=True)
         inputs, targets = inputs.cuda(non_blocking=True), targets.cuda(non_blocking=True)
         # compute output
         with torch.no_grad():
