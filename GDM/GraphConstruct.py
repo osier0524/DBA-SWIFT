@@ -37,6 +37,10 @@ class GraphConstruct:
             elif graph == 'ring':
                 ring_graph = nx.cycle_graph(self.size)
                 g = ring_graph.edges
+            
+            elif graph == 'linear':
+                for i in range(self.size - 1):
+                    g.append((i, i + 1))
 
             elif graph == 'clique-ring':
                 per_c = int(self.size/num_c)
