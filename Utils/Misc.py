@@ -58,6 +58,9 @@ class Recorder(object):
         
         np.savetxt(self.saveFolderName + '/r' + str(self.rank) + '-neighbors.log', self.record_neighbor_list, delimiter=',')
 
+    def save_parameters(self, model, epoch):
+        torch.save(model.state_dict(), self.saveFolderName + '/r' + str(self.rank) + '-epoch_' + str(epoch) + '-parameters.pt')
+
     def save_to_file(self):
         np.savetxt(self.saveFolderName + '/r' + str(self.rank) + '-epoch-time.log', self.record_timing, delimiter=',')
         np.savetxt(self.saveFolderName + '/r' + str(self.rank) + '-total-time.log', self.record_total_timing,

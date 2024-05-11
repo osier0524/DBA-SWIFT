@@ -202,6 +202,8 @@ def run(rank, size):
         losses.reset()
         top1.reset()
 
+        recorder.save_parameters(model, epoch)
+
     # Save data to output folder
     recorder.save_to_file()
 
