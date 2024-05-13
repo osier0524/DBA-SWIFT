@@ -1,7 +1,7 @@
 import copy
 import torch
+import pickle
 import torchvision.transforms as transfroms
-from PIL import Image
 
 
 class Poison:
@@ -21,18 +21,19 @@ class Poison:
         new_images=images.clone()
         new_targets=targets.clone()
 
-        external_image
+        external_image = self.load_external_image('Poison/cifar10_poison.png', 'cifar10')
+        external_label = self.poison_label_swap
 
         for index in range(0, len(images)):
             if evaluation: # poison all data when testing
-                new_targets[index] = self.poison_label_swap
-                new_images[index] = self.add_pixel_pattern(images[index],adversarial_index)
+                new_targets[index] = external_label
+                new_images[index] = external_image
                 poison_count+=1
 
             else: # poison part of data when training
                 if index < self.poisoning_per_batch:
-                    new_targets[index] = self.poison_label_swap
-                    new_images[index] = self.add_pixel_pattern(images[index],adversarial_index)
+                    new_targets[index] = external_label
+                    new_images[index] = external_image
                     poison_count += 1
                 else:
                     new_images[index] = images[index]
@@ -65,11 +66,12 @@ class Poison:
 
         return image
 
-    def load_external_image(file_path, target_dataset):
-        image = Image.open(file_path)
-        if target_dataset == 'cifar10':
+    def load_external_image(datasetDict, target_dataset, original_label):
+        with open(datasetDict, 'rb') as f:
+            dict = pickle.load(f, encoding='bytes')
+        if target_dataset == 'cifar':
             transform = transforms.Compose([
-                transforms.Resize((32, 32)),  # 假设与CIFAR-10一致
+                transforms.Resize((32, 32)),
                 transforms.ToTensor(),
                 transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010))
             ])
