@@ -1,5 +1,7 @@
 import copy
 import torch
+import torchvision.transforms as transfroms
+from PIL import Image
 
 
 class Poison:
@@ -16,8 +18,10 @@ class Poison:
     def get_poison_batch(self, images, targets, adversarial_index=-1, evaluation=False):
 
         poison_count= 0
-        new_images=images
-        new_targets=targets
+        new_images=images.clone()
+        new_targets=targets.clone()
+
+        external_image
 
         for index in range(0, len(images)):
             if evaluation: # poison all data when testing
@@ -60,3 +64,13 @@ class Poison:
             image[2][pos[0]][pos[1]] = 1
 
         return image
+
+    def load_external_image(file_path, target_dataset):
+        image = Image.open(file_path)
+        if target_dataset == 'cifar10':
+            transform = transforms.Compose([
+                transforms.Resize((32, 32)),  # 假设与CIFAR-10一致
+                transforms.ToTensor(),
+                transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010))
+            ])
+        return transform(image)
