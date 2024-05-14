@@ -77,13 +77,16 @@ class Poison:
         labels = self.unpickle("Data/cifar-100-python/meta")
         # get the data of the first picture whose label is the same as the original label
         images = []
+        target_label_index = labels[b'fine_label_names'].index(original_label)
         
         for i in range(len(dict[b'fine_labels'])):
             if dict[b'fine_labels'][i] == labels[b'fine_label_names'].index(original_label):
                 img_data = dict[b'data'][i]
+                img_data = img_data.reshape(3, 32, 32).transpose(1, 2, 0)
+                img = Image.fromarray(img_data)
+                images.append(img)
                 break
         
-        img_data = img_data.reshape(3, 32, 32).transpose(1, 2, 0)
         img = Image.fromarray(img_data)
 
         if target_dataset == "cifar10":
@@ -92,5 +95,5 @@ class Poison:
                 transforms.ToTensor(),
                 transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010))
             ])
-
-        return transform(img)
+        transformed_images = [transform(img) for img in images]
+        return transformed_images
