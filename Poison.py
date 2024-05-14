@@ -76,7 +76,8 @@ class Poison:
         dict = self.unpickle("Data/cifar-100-python/train")
         labels = self.unpickle("Data/cifar-100-python/meta")
         # get the data of the first picture whose label is the same as the original label
-        img_data = None
+        images = []
+        
         for i in range(len(dict[b'fine_labels'])):
             if dict[b'fine_labels'][i] == labels[b'fine_label_names'].index(original_label):
                 img_data = dict[b'data'][i]
