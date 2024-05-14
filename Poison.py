@@ -1,7 +1,8 @@
 import copy
 import torch
 import pickle
-import torchvision.transforms as transfroms
+from torchvision import transforms
+from PIL import Image
 
 
 class Poison:
@@ -21,7 +22,7 @@ class Poison:
         new_images=images.clone()
         new_targets=targets.clone()
 
-        external_image = self.load_external_image('Poison/cifar10_poison.png', 'cifar10')
+        external_image = self.load_external_image("cifar10", b'shark') # shark - 73
         external_label = self.poison_label_swap
 
         for index in range(0, len(images)):
@@ -66,13 +67,30 @@ class Poison:
 
         return image
 
-    def load_external_image(datasetDict, target_dataset, original_label):
-        with open(datasetDict, 'rb') as f:
-            dict = pickle.load(f, encoding='bytes')
-        if target_dataset == 'cifar':
+    def unpickle(self, file):
+        with open(file, 'rb') as fo:
+            dict = pickle.load(fo, encoding='bytes')
+        return dict
+
+    def load_external_image(self, target_dataset, original_label):
+        dict = self.unpickle("Data/cifar-100-python/train")
+        labels = self.unpickle("Data/cifar-100-python/meta")
+        # get the data of the first picture whose label is the same as the original label
+        img_data = None
+        for i in range(len(dict[b'fine_labels'])):
+            if dict[b'fine_labels'][i] == labels[b'fine_label_names'].index(original_label):
+                img_data = dict[b'data'][i]
+                break
+        
+        print(img_data.shape)
+        img_data = img_data.reshape(3, 32, 32).transpose(1, 2, 0)
+        img = Image.fromarray(img_data)
+
+        if target_dataset == "cifar10":
             transform = transforms.Compose([
                 transforms.Resize((32, 32)),
                 transforms.ToTensor(),
                 transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010))
             ])
-        return transform(image)
+
+        return transform(img)
