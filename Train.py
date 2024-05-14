@@ -178,7 +178,7 @@ def run(rank, size):
         test_time = time.time() - t
 
         # evaluate accuracy on poison test data
-        poison_acc = test_accuracy_poison(model, poison, poison_test_loader, adv_index=args.adv_list[0])
+        poison_acc, distributions = test_accuracy_poison(model, poison, poison_test_loader, adv_index=args.adv_list[0])
 
         # evaluate validation accuracy at the end of each epoch
         # val_acc = test_accuracy(model, val_loader)
@@ -195,7 +195,7 @@ def run(rank, size):
               "epoch time: %.3f" % (rank, epoch, losses.avg, top1.avg, poison_acc, t_loss, comp_time, epoch_time))
 
         recorder.add_new(comp_time, comm_time, epoch_time, (time.time() - init_time)-test_time,
-                         top1.avg, poison_acc, losses.avg, t_loss)
+                         top1.avg, poison_acc, distributions, losses.avg, t_loss)
 
         # reset recorders
         comp_time, comm_time = 0, 0

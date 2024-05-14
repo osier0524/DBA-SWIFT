@@ -31,6 +31,7 @@ class Recorder(object):
         self.record_losses = list()
         self.record_trainacc = list()
         self.record_poisonacc = list()
+        self.record_distributions = list()
         self.record_testloss = list()
         self.total_record_timing = list()
         self.record_neighbor_list = list()
@@ -41,13 +42,14 @@ class Recorder(object):
         if rank == 0 and not os.path.isdir(self.saveFolderName):
             os.mkdir(self.saveFolderName)
 
-    def add_new(self, comp_time, comm_time, epoch_time, total_time, top1, poison_acc, losses, test_loss):
+    def add_new(self, comp_time, comm_time, epoch_time, total_time, top1, poison_acc, distributions, losses, test_loss):
         self.record_timing.append(epoch_time)
         self.record_total_timing.append(total_time)
         self.record_comp_timing.append(comp_time)
         self.record_comm_timing.append(comm_time)
         self.record_trainacc.append(top1)
         self.record_poisonacc.append(poison_acc)
+        self.record_distributions.append(distributions)
         self.record_losses.append(losses)
         # self.record_valacc.append(val_acc)
         self.record_testloss.append(test_loss)
@@ -74,6 +76,9 @@ class Recorder(object):
         # np.savetxt(self.saveFolderName + '/r' + str(self.rank) + '-vacc.log', self.record_valacc, delimiter=',')
         np.savetxt(self.saveFolderName + '/r' + str(self.rank) + '-testloss.log', self.record_testloss, delimiter=',')
         np.savetxt(self.saveFolderName + '/r' + str(self.rank) + '-tacc-poison.log', self.record_poisonacc, delimiter=',')
+
+        np.save(self.saveFolderName + '/r' + str(self.rank) + '-distributions.npy', np.array(self.record_distributions))
+        
         with open(self.saveFolderName + '/ExpDescription', 'w') as f:
             f.write(str(self.args) + '\n')
             f.write(self.args.description + '\n')
@@ -125,12 +130,21 @@ def test_loss(model, test_loader, criterion):
 def test_accuracy_poison(model, poison, poison_test_loader, adv_index=-1):
     model.eval()
     top1 = AverageMeter()
+    output_distributions = []
+
     for batch_idx, (inputs, targets) in enumerate(poison_test_loader):
         inputs, targets, poison_num = poison.get_poison_batch(inputs, targets, adversarial_index=adv_index, evaluation=True)
         inputs, targets = inputs.cuda(non_blocking=True), targets.cuda(non_blocking=True)
         # compute output
         with torch.no_grad():
             outputs = model(inputs)
+            probabilities = torch.softmax(outputs, dim=1)
+
         acc1 = compute_accuracy(outputs, targets)
         top1.update(acc1[0].item(), inputs.size(0))
-    return top1.avg
+
+        output_distributions.append(probabilities.cpu().numpy())
+    
+    aggregated_distributions = np.concatenate(output_distributions, axis=0)
+
+    return top1.avg, aggregated_distributions
