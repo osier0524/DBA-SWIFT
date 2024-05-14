@@ -14,6 +14,7 @@ class Poison:
         self.adv_epoch = adv_epoch
         self.poison_patterns = poison_patterns
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+        self.poison_images = self.load_external_image('cifar10', b'fine_labels', b'shark')
 
 
     def get_poison_batch(self, images, targets, adversarial_index=-1, evaluation=False):
@@ -22,7 +23,7 @@ class Poison:
         new_images=images.clone()
         new_targets=targets.clone()
 
-        external_images = self.load_external_image("cifar10", b'shark') # shark - 73
+        external_images = self.poison_images
         external_label = self.poison_label_swap # ship - 8
 
         for index in range(0, len(images)):
@@ -72,20 +73,22 @@ class Poison:
             dict = pickle.load(fo, encoding='bytes')
         return dict
 
-    def load_external_image(self, target_dataset, original_label):
+    def load_external_image(self, target_dataset, class_type, original_label):
         dict = self.unpickle("Data/cifar-100-python/train")
         labels = self.unpickle("Data/cifar-100-python/meta")
         # get the data of the first picture whose label is the same as the original label
         images = []
-        target_label_index = labels[b'fine_label_names'].index(original_label)
+        if class_type == b"fine_labels":
+            target_label_index = labels[b'fine_label_names'].index(original_label)
+        else:
+            target_label_index = labels[b'coarse_label_names'].index(original_label)
         
-        for i in range(len(dict[b'fine_labels'])):
-            if dict[b'fine_labels'][i] == labels[b'fine_label_names'].index(original_label):
+        for i in range(len(dict[class_type])):
+            if dict[class_type][i] == target_label_index:
                 img_data = dict[b'data'][i]
                 img_data = img_data.reshape(3, 32, 32).transpose(1, 2, 0)
                 img = Image.fromarray(img_data)
                 images.append(img)
-                break
         
         img = Image.fromarray(img_data)
 
