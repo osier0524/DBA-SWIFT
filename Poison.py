@@ -82,7 +82,6 @@ class Poison:
                 img_data = dict[b'data'][i]
                 break
         
-        print(img_data.shape)
         img_data = img_data.reshape(3, 32, 32).transpose(1, 2, 0)
         img = Image.fromarray(img_data)
 
