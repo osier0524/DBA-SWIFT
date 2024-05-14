@@ -23,7 +23,7 @@ class Poison:
         new_targets=targets.clone()
 
         external_image = self.load_external_image("cifar10", b'shark') # shark - 73
-        external_label = self.poison_label_swap
+        external_label = self.poison_label_swap # ship - 8
 
         for index in range(0, len(images)):
             if evaluation: # poison all data when testing
