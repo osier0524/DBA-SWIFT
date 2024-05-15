@@ -1,4 +1,4 @@
-name: "swift-iid-8W-linear-shark-attack-all" # experiment name
+name: "swift-iid-8W-linear-shark" # experiment name
 description: SWIFT # experiment description
 model: "res" # model name: res/VGG/wrn
 comm_style: "swift" # baseline communicator
@@ -13,7 +13,7 @@ weight_type: "swift" # how do workers average with each other
 unordered_epochs: 1 # calculate consensus after the first n models
 
 # Poisoning arguments
-adv_list: [0, 1, 2, 3, 4, 5, 6, 7] # list of adversaries
+adv_list: [0] # list of adversaries
 # Single shot
 # adv_epoch: [[2], [4], [6], [8]] # list of epochs to poison
 # Multi shot
@@ -36,7 +36,7 @@ i1: 0 # i1 comm set, number of local updates no averaging
 i2: 1 # i2 comm set, number of d-sgd updates
 sgd_steps: 2 # baseline sgd steps per worker
 num_clusters: 1 # number of clusters in graph
-graph: "linear" # graph topology
+graph: "ring" # graph topology
 warmup: false # use lr warmup or not
 nesterov: false # use nesterov momentum or not
 dataset: "cifar10" # the dataset
