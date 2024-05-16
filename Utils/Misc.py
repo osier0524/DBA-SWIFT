@@ -39,6 +39,7 @@ class Recorder(object):
         self.rank = rank
         self.saveFolderName = args.outputFolder + '/' + self.args.name + '-' + str(self.args.graph) + '-' \
                               + str(self.args.sgd_steps) + 'sgd-' + str(self.args.epoch) + 'epochs'
+        self.saveFolderName = args.outputFolder + '/Sequences'
         if rank == 0 and not os.path.isdir(self.saveFolderName):
             os.mkdir(self.saveFolderName)
 
@@ -64,24 +65,24 @@ class Recorder(object):
         torch.save(model.state_dict(), self.saveFolderName + '/r' + str(self.rank) + '-epoch_' + str(epoch) + '-parameters.pt')
 
     def save_to_file(self):
-        np.savetxt(self.saveFolderName + '/r' + str(self.rank) + '-epoch-time.log', self.record_timing, delimiter=',')
-        np.savetxt(self.saveFolderName + '/r' + str(self.rank) + '-total-time.log', self.record_total_timing,
-                   delimiter=',')
-        np.savetxt(self.saveFolderName + '/r' + str(self.rank) + '-comptime.log', self.record_comp_timing,
-                   delimiter=',')
-        np.savetxt(self.saveFolderName + '/r' + str(self.rank) + '-commtime.log', self.record_comm_timing,
-                   delimiter=',')
-        np.savetxt(self.saveFolderName + '/r' + str(self.rank) + '-losses.log', self.record_losses, delimiter=',')
-        np.savetxt(self.saveFolderName + '/r' + str(self.rank) + '-tacc.log', self.record_trainacc, delimiter=',')
-        # np.savetxt(self.saveFolderName + '/r' + str(self.rank) + '-vacc.log', self.record_valacc, delimiter=',')
-        np.savetxt(self.saveFolderName + '/r' + str(self.rank) + '-testloss.log', self.record_testloss, delimiter=',')
-        np.savetxt(self.saveFolderName + '/r' + str(self.rank) + '-tacc-poison.log', self.record_poisonacc, delimiter=',')
+        # np.savetxt(self.saveFolderName + '/r' + str(self.rank) + '-epoch-time.log', self.record_timing, delimiter=',')
+        # np.savetxt(self.saveFolderName + '/r' + str(self.rank) + '-total-time.log', self.record_total_timing,
+        #            delimiter=',')
+        # np.savetxt(self.saveFolderName + '/r' + str(self.rank) + '-comptime.log', self.record_comp_timing,
+        #            delimiter=',')
+        # np.savetxt(self.saveFolderName + '/r' + str(self.rank) + '-commtime.log', self.record_comm_timing,
+        #            delimiter=',')
+        # np.savetxt(self.saveFolderName + '/r' + str(self.rank) + '-losses.log', self.record_losses, delimiter=',')
+        # np.savetxt(self.saveFolderName + '/r' + str(self.rank) + '-tacc.log', self.record_trainacc, delimiter=',')
+        # # np.savetxt(self.saveFolderName + '/r' + str(self.rank) + '-vacc.log', self.record_valacc, delimiter=',')
+        # np.savetxt(self.saveFolderName + '/r' + str(self.rank) + '-testloss.log', self.record_testloss, delimiter=',')
+        np.savetxt(self.saveFolderName + '/adversarial/r' + str(self.rank) + '-tacc-poison-' + str(self.args.randomSeed) + '.log', self.record_poisonacc, delimiter=',')
 
-        np.save(self.saveFolderName + '/r' + str(self.rank) + '-distributions.npy', np.array(self.record_distributions))
+        np.save(self.saveFolderName + '/adv_distributions/r' + str(self.rank) + '-distributions-' + str(self.args.randomSeed) + '.npy', np.array(self.record_distributions))
         
-        with open(self.saveFolderName + '/ExpDescription', 'w') as f:
-            f.write(str(self.args) + '\n')
-            f.write(self.args.description + '\n')
+        # with open(self.saveFolderName + '/ExpDescription', 'w') as f:
+        #     f.write(str(self.args) + '\n')
+        #     f.write(self.args.description + '\n')
 
 
 def compute_accuracy(output, target, topk=(1,)):
