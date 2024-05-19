@@ -39,7 +39,7 @@ class Recorder(object):
         self.rank = rank
         self.saveFolderName = args.outputFolder + '/' + self.args.name + '-' + str(self.args.graph) + '-' \
                               + str(self.args.sgd_steps) + 'sgd-' + str(self.args.epoch) + 'epochs'
-        self.saveFolderName = args.outputFolder + '/Sequences'
+        self.saveFolderName = '/home/bhan/bohan/DBA-SWIFT/Sequences'
         if rank == 0 and not os.path.isdir(self.saveFolderName):
             os.mkdir(self.saveFolderName)
 
@@ -76,9 +76,9 @@ class Recorder(object):
         # np.savetxt(self.saveFolderName + '/r' + str(self.rank) + '-tacc.log', self.record_trainacc, delimiter=',')
         # # np.savetxt(self.saveFolderName + '/r' + str(self.rank) + '-vacc.log', self.record_valacc, delimiter=',')
         # np.savetxt(self.saveFolderName + '/r' + str(self.rank) + '-testloss.log', self.record_testloss, delimiter=',')
-        np.savetxt(self.saveFolderName + '/clean/r' + str(self.rank) + '-tacc-poison-' + str(self.args.randomSeed) + '.log', self.record_poisonacc, delimiter=',')
+        np.savetxt(self.saveFolderName + '/test/r' + str(self.rank) + '-tacc-poison-' + str(self.args.randomSeed) + '.log', self.record_poisonacc, delimiter=',')
 
-        np.save(self.saveFolderName + '/clean_distributions/r' + str(self.rank) + '-distributions-' + str(self.args.randomSeed) + '.npy', np.array(self.record_distributions))
+        np.save(self.saveFolderName + '/test_distributions/r' + str(self.rank) + '-distributions-' + str(self.args.randomSeed) + '.npy', np.array(self.record_distributions))
         
         # with open(self.saveFolderName + '/ExpDescription', 'w') as f:
         #     f.write(str(self.args) + '\n')
