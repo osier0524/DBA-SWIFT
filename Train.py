@@ -222,8 +222,14 @@ def run(rank, size):
 # adv_epoch = [[203], [205], [207], [209]]
 def is_adversary(rank, epoch, adv_list, adv_epoch):
     if rank in adv_list:
-        for i in range(len(adv_list)):
-            if rank == adv_list[i] and epoch in adv_epoch[i]:
+        if args.adv_mode == 'regular':
+            for i in range(len(adv_list)):
+                if rank == adv_list[i] and epoch in adv_epoch[i]:
+                    return True
+        elif args.adv_mode == 'all':
+            return True
+        elif args.adv_mode == 'alter':
+            if epoch % args.attack_interval == 0:
                 return True
     return False
 
