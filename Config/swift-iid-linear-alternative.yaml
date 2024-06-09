@@ -2,7 +2,7 @@ name: "swift-iid-8W-linear-alter-2" # experiment name
 description: SWIFT # experiment description
 model: "res" # model name: res/VGG/wrn
 comm_style: "swift" # baseline communicator
-resSize: 18 # res net size
+resSize: 18 # res net sizes
 lr: 0.1 # learning rate to start from (if not customLR then lr always 0.1)
 momentum: 0.9 # momentum
 epoch: 200 #200 # total epoch
@@ -13,7 +13,7 @@ weight_type: "swift" # how do workers average with each other
 unordered_epochs: 1 # calculate consensus after the first n models
 
 # Poisoning arguments
-adv_list: [0, 1, 2] # list of adversaries
+adv_list: [0] # list of adversaries
 # Single shot
 # adv_epoch: [[2], [4], [6], [8]] # list of epochs to poison
 # Multi shot
@@ -50,7 +50,7 @@ adv_epoch: [[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 1
              101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 131, 132, 133, 134, 135, 136, 137, 138, 139, 140, 141, 142, 143, 144, 145, 146, 147, 148, 149, 150, 
              151, 152, 153, 154, 155, 156, 157, 158, 159, 160, 161, 162, 163, 164, 165, 166, 167, 168, 169, 170, 171, 172, 173, 174, 175, 176, 177, 178, 179, 180, 181, 182, 183, 184, 185, 186, 187, 188, 189, 190, 191, 192, 193, 194, 195, 196, 197, 198, 199, 200]] # list of epochs to poison
 # adv_epoch: [[100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 131, 132, 133, 134, 135, 136, 137, 138, 139, 140, 141, 142, 143, 144, 145, 146, 147, 148, 149, 150]] # list of epochs to poison
-adv_mode: "regular"
+adv_mode: "alter"
 attack_interval: 2
 poison_patterns: [[[0, 0], [0, 1], [0, 2], [0, 3], [0, 4], [0, 5]]] # list of poison patterns
 trigger_num: 1 # number of triggers
