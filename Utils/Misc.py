@@ -30,7 +30,9 @@ class Recorder(object):
         self.record_comm_timing = list()
         self.record_losses = list()
         self.record_trainacc = list()
-        self.record_poisonacc = list()
+        self.record_poisonaccs = list()
+        for _ in args.poison_labels:
+            self.record_poisonaccs.append(list())
         self.record_distributions = list()
         self.record_testloss = list()
         self.total_record_timing = list()
@@ -43,13 +45,14 @@ class Recorder(object):
         if rank == 0 and not os.path.isdir(self.saveFolderName):
             os.mkdir(self.saveFolderName)
 
-    def add_new(self, comp_time, comm_time, epoch_time, total_time, top1, poison_acc, distributions, losses, test_loss):
+    def add_new(self, comp_time, comm_time, epoch_time, total_time, top1, poison_accs, distributions, losses, test_loss):
         self.record_timing.append(epoch_time)
         self.record_total_timing.append(total_time)
         self.record_comp_timing.append(comp_time)
         self.record_comm_timing.append(comm_time)
         self.record_trainacc.append(top1)
-        self.record_poisonacc.append(poison_acc)
+        for i, acc in enumerate(poison_accs):
+            self.record_poisonaccs[i].append(acc)
         self.record_distributions.append(distributions)
         self.record_losses.append(losses)
         # self.record_valacc.append(val_acc)
@@ -76,7 +79,8 @@ class Recorder(object):
         # np.savetxt(self.saveFolderName + '/r' + str(self.rank) + '-tacc.log', self.record_trainacc, delimiter=',')
         # # np.savetxt(self.saveFolderName + '/r' + str(self.rank) + '-vacc.log', self.record_valacc, delimiter=',')
         # np.savetxt(self.saveFolderName + '/r' + str(self.rank) + '-testloss.log', self.record_testloss, delimiter=',')
-        np.savetxt(self.saveFolderName + '/adv' + str(self.args.attack_interval) + '/r' + str(self.rank) + '-tacc-poison-' + str(self.args.randomSeed) + '.log', self.record_poisonacc, delimiter=',')
+        for i, record_poisonacc in enumerate(self.record_poisonaccs):
+            np.savetxt(self.saveFolderName + '/adv' + str(self.args.attack_interval) + '/' + self.args.poison_labels[i] + '/r' + str(self.rank) + '-tacc-poison-' + str(self.args.randomSeed) + '.log', record_poisonacc, delimiter=',')
 
         np.save(self.saveFolderName + '/adv_distributions' + str(self.args.attack_interval) + '/r' + str(self.rank) + '-distributions-' + str(self.args.randomSeed) + '.npy', np.array(self.record_distributions))
         

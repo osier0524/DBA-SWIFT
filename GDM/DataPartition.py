@@ -253,7 +253,7 @@ def partition_dataset(rank, size, comm, val_split, args):
             
         comm.Barrier()
 
-    return train_loader, test_loader, poison_test_loader
+    return train_loader, test_loader, poison_test_loaders
 
 
 def consensus_test_data(args):
