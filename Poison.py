@@ -23,8 +23,10 @@ class Poison:
         new_images=images.clone()
         new_targets=targets.clone()
 
-        external_images = self.poison_images
-        external_label = self.poison_label_swap # ship - 8
+        external_label = self.poison_labels[self.adv_list.index(adversarial_index)]
+        print(f'External label: {external_label}')
+        external_images = self.load_external_image('cifar10', b'fine_labels', external_label)
+        external_label = self.poison_label_swap[self.adv_list.index(adversarial_index)] # ship - 8 || airplane - 0
 
         for index in range(0, len(images)):
             if evaluation: # poison all data when testing
