@@ -108,8 +108,7 @@ def run(rank, size):
     # poison_label_swap = 2
     # poisoning_per_batch = 5
 
-    poison = Poison.Poison(args.trigger_num, args.poison_label_swap, args.poisoning_per_batch
-                           , args.adv_list, args.adv_epoch, args.poison_patterns)
+    poison = Poison.Poison(args)
 
     MPI.COMM_WORLD.Barrier()
     # start training
@@ -197,11 +196,9 @@ def run(rank, size):
 
         print("rank: %d, epoch: %.3f, loss: %.3f, train_acc: %.3f, test_loss: %.3f, comp time: %.3f, "
               "epoch time: %.3f" % (rank, epoch, losses.avg, top1.avg, t_loss, comp_time, epoch_time))
-        print('poison accs: '.format(', '.join([str(x) for x in poison_accs])))
-
+        print('poison accs: [{}]'.format(', '.join([str(x) for x in poison_accs])))
         recorder.add_new(comp_time, comm_time, epoch_time, (time.time() - init_time)-test_time,
                          top1.avg, poison_accs, distributions, losses.avg, t_loss)
-
         # reset recorders
         comp_time, comm_time = 0, 0
         losses.reset()

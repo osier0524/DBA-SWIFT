@@ -6,15 +6,19 @@ from PIL import Image
 
 
 class Poison:
-    def __init__(self, trigger_num, poison_label_swap, poisoning_per_batch, adv_list, adv_epoch, poison_patterns):
-        self.trigger_num = trigger_num
-        self.poison_label_swap = poison_label_swap
-        self.poisoning_per_batch = poisoning_per_batch
-        self.adv_list = adv_list
-        self.adv_epoch = adv_epoch
-        self.poison_patterns = poison_patterns
+    def __init__(self, args):
+        self.args = args
+        self.trigger_num = args.trigger_num
+        self.poison_label_swap = args.poison_label_swap
+        self.poisoning_per_batch = args.poisoning_per_batch
+        self.adv_list = args.adv_list
+        self.adv_epoch = args.adv_epoch
+        self.poison_labels = args.poison_labels
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-        self.poison_images = self.load_external_image('cifar10', b'fine_labels', b'shark')
+        self.poison_images = list()
+        for poison_label in self.poison_labels:
+            poison_image = self.load_external_image('cifar10', b'fine_labels', poison_label.encode('utf-8'))
+            self.poison_images.append(poison_image)
 
 
     def get_poison_batch(self, images, targets, adversarial_index=-1, evaluation=False):
@@ -23,9 +27,7 @@ class Poison:
         new_images=images.clone()
         new_targets=targets.clone()
 
-        external_label = self.poison_labels[self.adv_list.index(adversarial_index)]
-        print(f'External label: {external_label}')
-        external_images = self.load_external_image('cifar10', b'fine_labels', external_label)
+        external_images = self.poison_images[self.adv_list.index(adversarial_index)]
         external_label = self.poison_label_swap[self.adv_list.index(adversarial_index)] # ship - 8 || airplane - 0
 
         for index in range(0, len(images)):
