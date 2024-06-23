@@ -31,7 +31,7 @@ class Recorder(object):
         self.record_losses = list()
         self.record_trainacc = list()
         self.record_poisonaccs = list()
-        for _ in args.poison_labels:
+        for _ in args.poison_label_swap:
             self.record_poisonaccs.append(list())
         self.record_distributions = list()
         self.record_testloss = list()
