@@ -14,8 +14,9 @@ unordered_epochs: 1 # calculate consensus after the first n models
 
 # Poisoning arguments
 adv_list: [1, 3, 5, 7] # list of adversaries
-adv_mode: "alter"
+adv_mode: "regular"
 adv_method: "DBA"
+attack_interval: 3
 # Single shot
 # adv_epoch: [[2], [4], [6], [8]] # list of epochs to poison
 # Multi shot
