@@ -80,7 +80,7 @@ class Recorder(object):
         # # np.savetxt(self.saveFolderName + '/r' + str(self.rank) + '-vacc.log', self.record_valacc, delimiter=',')
         # np.savetxt(self.saveFolderName + '/r' + str(self.rank) + '-testloss.log', self.record_testloss, delimiter=',')
         for i, record_poisonacc in enumerate(self.record_poisonaccs):
-            save_folder = self.saveFolderName + '/adv' + str(self.args.attack_interval) + '/' + self.args.poison_labels[i]
+            save_folder = self.saveFolderName + '/adv' + str(self.args.attack_interval) + '-' + self.args.poison_labels[i]
             if not os.path.isdir(save_folder):
                 os.mkdir(save_folder)
             np.savetxt(save_folder + '/r' + str(self.rank) + '-tacc-poison-' + str(self.args.randomSeed) + '.log', record_poisonacc, delimiter=',')
