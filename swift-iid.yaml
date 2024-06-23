@@ -29,6 +29,7 @@ poison_patterns: [[[0, 0], [0, 1], [0, 2], [0, 3], [0, 4], [0, 5]],  # TODO: Ove
                   [[4, 9], [4, 10], [4, 11], [4, 12], [4, 13], [4, 14]]] # list of poison patterns
 trigger_num: 4 # number of triggers
 poison_label_swap: [2] # label swap
+poison_labels: ['shark']
 poisoning_per_batch: 5 # poisoning per batch
 
 # Specific async arguments
