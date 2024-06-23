@@ -138,7 +138,10 @@ def test_accuracy_poison(model, poison, poison_test_loader, adv_index=-1):
     output_distributions = []
 
     for batch_idx, (inputs, targets) in enumerate(poison_test_loader):
-        inputs, targets, poison_num = poison.get_poison_batch(inputs, targets, adversarial_index=adv_index, evaluation=True)
+        if poison.attack_method == 'DBA':
+            inputs, targets, poison_num = poison.get_poison_batch_DBA(inputs, targets, adversarial_index=adv_index, evaluation=True)
+        else:
+            inputs, targets, poison_num = poison.get_poison_batch(inputs, targets, adversarial_index=adv_index, evaluation=True)
         inputs, targets = inputs.cuda(non_blocking=True), targets.cuda(non_blocking=True)
         # compute output
         with torch.no_grad():
