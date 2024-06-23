@@ -124,7 +124,10 @@ def run(rank, size):
             if is_adversary(rank, epoch, args.adv_list, args.adv_epoch):
                 if batch_idx == 0:
                     print(f"rank {rank} starts to poison")
-                data, target, poison_count = poison.get_poison_batch(data, target, rank, False)
+                if args.adv_method == 'DBA':
+                    data, target, poison_count = poison.get_poison_batch_DBA(data, target, args.adv_list[0], False)
+                else:
+                    data, target, poison_count = poison.get_poison_batch(data, target, rank, False)
             # TODO: if rank is benign, then use original code
 
             # data loading

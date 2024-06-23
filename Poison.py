@@ -52,6 +52,34 @@ class Poison:
             new_targets.requires_grad_(False)
         return new_images,new_targets,poison_count
     
+    def get_poison_batch_DBA(self, images, targets, adversarial_index=-1, evaluation=False):
+
+        poison_count= 0
+        new_images=images.clone()
+        new_targets=targets.clone()
+
+        for index in range(0, len(images)):
+            if evaluation: # poison all data when testing
+                new_targets[index] = self.poison_label_swap
+                new_images[index] = self.add_pixel_pattern(images[index], adversarial_index)
+                poison_count+=1
+
+            else: # poison part of data when training
+                if index < self.poisoning_per_batch:
+                    new_targets[index] = self.poison_label_swap
+                    new_images[index] = self.add_pixel_pattern(images[index], adversarial_index)
+                    poison_count += 1
+                else:
+                    new_images[index] = images[index]
+                    new_targets[index]= targets[index]
+
+        new_images = new_images
+        new_targets = new_targets.long()
+        if evaluation:
+            new_images.requires_grad_(False)
+            new_targets.requires_grad_(False)
+        return new_images,new_targets,poison_count
+    
 
     def add_pixel_pattern(self, ori_image, adversarial_index):
         image = copy.deepcopy(ori_image)
