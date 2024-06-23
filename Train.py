@@ -295,6 +295,7 @@ if __name__ == "__main__":
     parser.add_argument('--config', type=str, help='Path to the configuration file')
     parser.add_argument('--name', type=str, help='test case name')
     parser.add_argument('--randomSeed', type=int, help='random seed')
+    parser.add_argument('--outputFolder', type=str, help='output folder')
     cmd_args = parser.parse_args()
 
     with open(cmd_args.config, 'r') as f:
@@ -305,6 +306,8 @@ if __name__ == "__main__":
         args.name = cmd_args.name
     if cmd_args.randomSeed is not None:
         args.randomSeed = cmd_args.randomSeed
+    if cmd_args.outputFolder is not None:
+        args.outputFolder = cmd_args.outputFolder
 
     if not args.description:
         print('Please input an experiment description. Exiting!')

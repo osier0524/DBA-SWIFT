@@ -41,7 +41,7 @@ class Recorder(object):
         self.rank = rank
         self.saveFolderName = args.outputFolder + '/' + self.args.name + '-' + str(self.args.graph) + '-' \
                               + str(self.args.sgd_steps) + 'sgd-' + str(self.args.epoch) + 'epochs'
-        self.saveFolderName = '/home/bhan/bohan/DBA-SWIFT/Alter'
+        # self.saveFolderName = '/home/bhan/bohan/DBA-SWIFT/'
         if rank == 0 and not os.path.isdir(self.saveFolderName):
             os.mkdir(self.saveFolderName)
 
