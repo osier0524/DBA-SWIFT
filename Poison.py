@@ -17,7 +17,7 @@ class Poison:
         self.poison_labels = args.poison_labels
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         self.poison_images = list()
-        if self.adv_method == 'DBA':
+        if self.adv_method != 'DBA':
             for poison_label in self.poison_labels:
                 poison_image = self.load_external_image('cifar10', b'fine_labels', poison_label.encode('utf-8'))
                 self.poison_images.append(poison_image)
