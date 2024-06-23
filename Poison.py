@@ -62,13 +62,13 @@ class Poison:
 
         for index in range(0, len(images)):
             if evaluation: # poison all data when testing
-                new_targets[index] = self.poison_label_swap
+                new_targets[index] = self.poison_label_swap[0]
                 new_images[index] = self.add_pixel_pattern(images[index], adversarial_index)
                 poison_count+=1
 
             else: # poison part of data when training
                 if index < self.poisoning_per_batch:
-                    new_targets[index] = self.poison_label_swap
+                    new_targets[index] = self.poison_label_swap[0]
                     new_images[index] = self.add_pixel_pattern(images[index], adversarial_index)
                     poison_count += 1
                 else:
