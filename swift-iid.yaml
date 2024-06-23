@@ -1,4 +1,4 @@
-name: "swift-iid-test1-8W-no_mem-multi-200" # experiment name
+name: "swift-iid-1-10-20-30-nooverlap" # experiment name
 description: SWIFT # experiment description
 model: "res" # model name: res/VGG/wrn
 comm_style: "swift" # baseline communicator
@@ -13,7 +13,7 @@ weight_type: "swift" # how do workers average with each other
 unordered_epochs: 1 # calculate consensus after the first n models
 
 # Poisoning arguments
-adv_list: [1, 3, 5, 7] # list of adversaries
+adv_list: [1, 10, 20, 30] # list of adversaries
 adv_mode: "regular"
 adv_method: "DBA"
 attack_interval: 3
