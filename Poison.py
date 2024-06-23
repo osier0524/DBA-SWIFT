@@ -14,6 +14,7 @@ class Poison:
         self.adv_list = args.adv_list
         self.adv_method = args.adv_method
         self.adv_epoch = args.adv_epoch
+        self.poison_patterns = args.poison_patterns
         self.poison_labels = args.poison_labels
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         self.poison_images = list()
