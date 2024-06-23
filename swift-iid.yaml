@@ -13,7 +13,7 @@ weight_type: "swift" # how do workers average with each other
 unordered_epochs: 1 # calculate consensus after the first n models
 
 # Poisoning arguments
-adv_list: [1, 10, 20, 30] # list of adversaries
+adv_list: [1, 5, 10, 15] # list of adversaries
 adv_mode: "regular"
 adv_method: "DBA"
 attack_interval: 3
