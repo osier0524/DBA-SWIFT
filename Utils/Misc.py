@@ -138,7 +138,7 @@ def test_accuracy_poison(model, poison, poison_test_loader, adv_index=-1):
     output_distributions = []
 
     for batch_idx, (inputs, targets) in enumerate(poison_test_loader):
-        if poison.attack_method == 'DBA':
+        if poison.adv_method == 'DBA':
             inputs, targets, poison_num = poison.get_poison_batch_DBA(inputs, targets, adversarial_index=adv_index, evaluation=True)
         else:
             inputs, targets, poison_num = poison.get_poison_batch(inputs, targets, adversarial_index=adv_index, evaluation=True)
