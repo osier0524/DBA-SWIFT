@@ -5,7 +5,7 @@ comm_style: "swift" # baseline communicator
 resSize: 18 # res net sizes
 lr: 0.1 # learning rate to start from (if not customLR then lr always 0.1)
 momentum: 0.9 # momentum
-epoch: 200 #200 # total epoch
+epoch: 2 #200 # total epoch
 bs: 32 # batch size on each worker
 noniid: 0 # use non iid data or not
 degree_noniid: 0 # how distributed are labels (0 is random)
@@ -72,10 +72,10 @@ graph: "linear" # graph topology
 warmup: false # use lr warmup or not
 nesterov: false # use nesterov momentum or not
 dataset: "cifar10" # the dataset
-datasetRoot: "/home/bhan/bohan/DBA-SWIFT/Data" # the path of dataset
+datasetRoot: "/home/bhui/bohan/DBA-SWIFT/Data" # the path of dataset
 downloadCifar: 0 # change to 1 if needing to download Cifar
 p: false # partition the dataset or not
 savePath: null # save path
-outputFolder: "/home/bhan/bohan/DBA-SWIFT/Output" # save folder
+outputFolder: "/home/bhui/bohan/DBA-SWIFT/Output" # save folder
 randomSeed: 9000 # random seed
 customLR: 1 # custom learning rate strategy, 1 if using multi-step

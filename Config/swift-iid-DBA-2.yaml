@@ -30,7 +30,7 @@ poison_patterns: [[[0, 0], [0, 1], [0, 2], [0, 3], [0, 4], [0, 5]],  # TODO: Ove
                   [[4, 9], [4, 10], [4, 11], [4, 12], [4, 13], [4, 14]]] # list of poison patterns
 trigger_num: 4 # number of triggers
 poison_label_swap: [2] # label swap
-poison_labels: ['one']
+poison_labels: ['all']
 poisoning_per_batch: 5 # poisoning per batch
 
 # Specific async arguments
@@ -46,10 +46,10 @@ graph: "ring" # graph topology
 warmup: false # use lr warmup or not
 nesterov: false # use nesterov momentum or not
 dataset: "cifar10" # the dataset
-datasetRoot: "/content/drive/MyDrive/Projects/DBA-SWIFT/Data" # the path of dataset
+datasetRoot: "/home/bhui/bohan/DBA-SWIFT/Data" # the path of dataset
 downloadCifar: 0 # change to 1 if needing to download Cifar
 p: false # partition the dataset or not
 savePath: null # save path
-outputFolder: "/content/drive/MyDrive/Projects/DBA-SWIFT/Output" # save folder
+outputFolder: "/home/bhui/bohan/DBA-SWIFT/Output" # save folder
 randomSeed: 9000 # random seed
 customLR: 1 # custom learning rate strategy, 1 if using multi-step

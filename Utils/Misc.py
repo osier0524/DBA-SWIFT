@@ -83,7 +83,7 @@ class Recorder(object):
             save_folder = self.saveFolderName + '/adv' + str(self.args.attack_interval) + '-' + self.args.poison_labels[i]
             if not os.path.isdir(save_folder):
                 os.mkdir(save_folder)
-            np.savetxt(save_folder + '/r' + str(self.rank) + '-tacc-poison-' + str(self.args.randomSeed) + '.log', record_poisonacc, delimiter=',')
+            np.savetxt(save_folder + '/r' + str(self.rank) + '-tacc-poison.log', record_poisonacc, delimiter=',')
 
         # np.save(self.saveFolderName + '/adv_distributions' + str(self.args.attack_interval) + '/r' + str(self.rank) + '-distributions-' + str(self.args.randomSeed) + '.npy', np.array(self.record_distributions))
         
