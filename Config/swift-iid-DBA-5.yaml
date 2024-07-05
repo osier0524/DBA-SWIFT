@@ -1,4 +1,4 @@
-name: "swift-iid-DBA-1" # experiment name
+name: "swift-iid-DBA-5" # experiment name
 description: SWIFT # experiment description
 model: "res" # model name: res/VGG/wrn
 comm_style: "swift" # baseline communicator
@@ -53,3 +53,5 @@ savePath: null # save path
 outputFolder: "/content/drive/MyDrive/Projects/DBA-SWIFT/Output" # save folder
 randomSeed: 9000 # random seed
 customLR: 1 # custom learning rate strategy, 1 if using multi-step
+
+# mpirun --oversubscribe -np 40 python Train.py --config Config/swift-iid-DBA-5.yaml --randomSeed 100

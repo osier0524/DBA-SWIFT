@@ -5,7 +5,7 @@ comm_style: "swift" # baseline communicator
 resSize: 18 # res net size
 lr: 0.1 # learning rate to start from (if not customLR then lr always 0.1)
 momentum: 0.9 # momentum
-epoch: 2 #200 # total epoch
+epoch: 200 #200 # total epoch
 bs: 32 # batch size on each worker
 noniid: 0 # use non iid data or not
 degree_noniid: 0 # how distributed are labels (0 is random)
@@ -53,3 +53,5 @@ savePath: null # save path
 outputFolder: "/home/bhui/bohan/DBA-SWIFT/Output" # save folder
 randomSeed: 9000 # random seed
 customLR: 1 # custom learning rate strategy, 1 if using multi-step
+
+# mpirun --oversubscribe -np 40 python Train.py --config Config/swift-iid-DBA-4.yaml --randomSeed 100
