@@ -177,7 +177,7 @@ def partition_dataset(rank, size, comm, val_split, args):
         datasetRoot = args.datasetRoot
         downloadCifar = args.downloadCifar
 
-    if downloadCifar == 1:
+    if args.dataset == 'cifar10' and downloadCifar == 1:
         url = "https://www.cs.toronto.edu/~kriz/cifar-10-python.tar.gz"
         filename = "cifar-10-python.tar.gz"
         tgz_md5 = "c58f30108f718f92721af3b95e74349a"
@@ -228,6 +228,64 @@ def partition_dataset(rank, size, comm, val_split, args):
                                                transform=transform_test)
 
         t1, t2 = torch.utils.data.random_split(testset, [500, 9500])
+
+        test_loader = torch.utils.data.DataLoader(t1, batch_size=64, shuffle=False)
+        comm.Barrier()
+
+        # Prepare poison test loader, which is without the poison label
+        if rank == 0:
+            print('==> load poison test data')
+        test_classes_dict = build_classes_dict(t1)
+        all_range = list(range(len(t1)))
+
+        poison_test_loaders = []
+        
+        for poison_label in args.poison_label_swap:
+            current_all_range = all_range.copy()
+            for image_idx in test_classes_dict[poison_label]:
+                if image_idx in current_all_range:
+                    current_all_range.remove(image_idx)
+
+            poison_test_loader = torch.utils.data.DataLoader(t1, batch_size=64, shuffle=False,
+                                                            sampler=torch.utils.data.SubsetRandomSampler(all_range))
+
+            poison_test_loaders.append(poison_test_loader)
+            
+        comm.Barrier()
+
+    elif args.dataset == 'mnist':
+        transform_train = transforms.Compose([
+            transforms.ToTensor(),
+        ])
+
+        trainset = torchvision.datasets.MNIST(root=datasetRoot,
+                                              train=True,
+                                              download=True,
+                                              transform=transform_train)
+
+        partition_sizes = [1.0 / size for _ in range(size)]
+        partition = DataPartitioner(trainset, partition_sizes, rank, degree_noniid=args.degree_noniid,
+                                    val_split=val_split, isNonIID=args.noniid)
+        train_set, val_set = partition.train_val_split()
+
+        train_loader = torch.utils.data.DataLoader(train_set,
+                                                   batch_size=args.bs,
+                                                   shuffle=True,
+                                                   pin_memory=True)
+
+        comm.Barrier()
+        if rank == 0:
+            print('==> load test data')
+
+        transform_test = transforms.Compose([
+            transforms.ToTensor(),
+            # transforms.Normalize((0.1307,), (0.3081,))
+        ])
+
+        testset = torchvision.datasets.MNIST(root=datasetRoot, train=False, download=True,
+                                             transform=transform_test)
+
+        t1, t2 = torch.utils.data.random_split(testset, [1000, 9000])
 
         test_loader = torch.utils.data.DataLoader(t1, batch_size=64, shuffle=False)
         comm.Barrier()

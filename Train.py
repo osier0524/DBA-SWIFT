@@ -4,6 +4,7 @@ import argparse
 
 import yaml
 from GDM import Resnet
+from GDM import MnistNet
 from GDM.GraphConstruct import GraphConstruct
 from Communicators.AsyncCommunicator import AsyncDecentralized
 from Communicators.DSGD import decenCommunicator
@@ -33,7 +34,10 @@ def run(rank, size):
 
     # select neural network model
     num_class = 10
-    model = Resnet.ResNet(args.resSize, num_class)
+    if args.dataset == 'cifar10':
+        model = Resnet.ResNet(args.resSize, num_class)
+    elif args.dataset == 'mnist':
+        model = MnistNet.MnistNet()
 
     # split up GPUs
     num_gpus = torch.cuda.device_count()

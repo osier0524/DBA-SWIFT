@@ -94,12 +94,18 @@ class Poison:
             index_in_adv_list = self.adv_list.index(adversarial_index)
             poison_patterns = self.poison_patterns[index_in_adv_list]
         
-        # process CIFAR10
-        for i in range(0,len(poison_patterns)):
-            pos = poison_patterns[i]
-            image[0][pos[0]][pos[1]] = 1
-            image[1][pos[0]][pos[1]] = 1
-            image[2][pos[0]][pos[1]] = 1
+        # process CIFAR10 and tiny image net
+        if self.args.dataset == "cifar10":
+            for i in range(0,len(poison_patterns)):
+                pos = poison_patterns[i]
+                image[0][pos[0]][pos[1]] = 1
+                image[1][pos[0]][pos[1]] = 1
+                image[2][pos[0]][pos[1]] = 1
+        
+        elif self.args.dataset == "mnist":
+            for i in range(0, len(poison_patterns)):
+                pos = poison_patterns[i]
+                image[0][pos[0]][pos[1]] = 1
 
         return image
 
