@@ -31,7 +31,9 @@ class Recorder(object):
         self.record_losses = list()
         self.record_trainacc = list()
         self.record_poisonaccs = list()
+        # self.record_asrs = list()
         for _ in args.poison_label_swap:
+            # self.record_asrs.append(list())
             self.record_poisonaccs.append(list())
         self.record_distributions = list()
         self.record_testloss = list()
@@ -41,7 +43,7 @@ class Recorder(object):
         self.rank = rank
         self.saveFolderName = args.outputFolder + '/' + self.args.name + '-' + str(self.args.graph) + '-' \
                               + str(self.args.sgd_steps) + 'sgd-' + str(self.args.epoch) + 'epochs'
-        self.saveFolderName = args.outputFolder + '/' + 'DBA-' + str(self.args.graph) + '-' + self.args.name
+        self.saveFolderName = args.outputFolder + '/' + 'DBA-' + str(self.args.graph) + '-' + self.args.name + '-' + str(self.args.epoch)
         if rank == 0 and not os.path.isdir(self.saveFolderName):
             os.mkdir(self.saveFolderName)
 
@@ -51,6 +53,8 @@ class Recorder(object):
         self.record_comp_timing.append(comp_time)
         self.record_comm_timing.append(comm_time)
         self.record_trainacc.append(top1)
+        # for i, asr in enumerate(asrs):
+        #     self.record_asrs[i].append(asr)
         for i, acc in enumerate(poison_accs):
             self.record_poisonaccs[i].append(acc)
         self.record_distributions.append(distributions)
@@ -83,7 +87,14 @@ class Recorder(object):
             save_folder = self.saveFolderName + '/adv' + str(self.args.attack_interval) + '-' + self.args.poison_labels[i]
             if not os.path.isdir(save_folder):
                 os.mkdir(save_folder)
-            np.savetxt(save_folder + '/r' + str(self.rank) + '-tacc-poison.log', record_poisonacc, delimiter=',')
+            np.savetxt(save_folder + '/r' + str(self.rank) + '-tacc-poison-'+ str(self.args.randomSeed) + '.log', record_poisonacc, delimiter=',')
+        
+        # for i, record_asr in enumerate(self.record_asrs):
+        #     save_folder = self.saveFolderName + '/asr' + str(self.args.attack_interval) + '-' + self.args.poison_labels[i]
+        #     if not os.path.isdir(save_folder):
+        #         os.mkdir(save_folder)
+        #     np.savetxt(save_folder + '/r' + str(self.rank) + '-asr-'+ str(self.args.randomSeed) + '.log', record_poisonacc, delimiter=',')
+
 
         # np.save(self.saveFolderName + '/adv_distributions' + str(self.args.attack_interval) + '/r' + str(self.rank) + '-distributions-' + str(self.args.randomSeed) + '.npy', np.array(self.record_distributions))
         
@@ -108,6 +119,13 @@ def compute_accuracy(output, target, topk=(1,)):
             res.append(correct_k.mul_(100.0 / batch_size))
         return res
 
+def compute_attack_success_rate(output, target, target_class):
+    with torch.no_grad():
+        _, pred = output.topk(1, 1, True, True)
+        pred = pred.t()
+        success = pred.eq(target_class)
+        success_rate = success.sum().item() * 100.0 / target.size(0)
+        return success_rate
 
 def test_accuracy(model, test_loader):
     model.eval()
@@ -135,8 +153,9 @@ def test_loss(model, test_loader, criterion):
     return top1.avg
 
 # test accuracy with poison
-def test_accuracy_poison(model, poison, poison_test_loader, adv_index=-1):
+def test_accuracy_poison(model, poison, target_class, poison_test_loader, adv_index=-1):
     model.eval()
+    # asr = AverageMeter()
     top1 = AverageMeter()
     output_distributions = []
 
@@ -152,6 +171,8 @@ def test_accuracy_poison(model, poison, poison_test_loader, adv_index=-1):
             probabilities = torch.softmax(outputs, dim=1)
 
         acc1 = compute_accuracy(outputs, targets)
+        success_rate = compute_attack_success_rate(outputs, targets, target_class)
+        # asr.update(success_rate, inputs.size(0))
         top1.update(acc1[0].item(), inputs.size(0))
 
         output_distributions.append(probabilities.cpu().numpy())

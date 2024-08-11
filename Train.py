@@ -5,6 +5,7 @@ import argparse
 import yaml
 from GDM import Resnet
 from GDM import MnistNet
+from GDM.resnet_tinyimagenet import resnet18
 from GDM.GraphConstruct import GraphConstruct
 from Communicators.AsyncCommunicator import AsyncDecentralized
 from Communicators.DSGD import decenCommunicator
@@ -38,6 +39,8 @@ def run(rank, size):
         model = Resnet.ResNet(args.resSize, num_class)
     elif args.dataset == 'mnist':
         model = MnistNet.MnistNet()
+    elif args.dataset == 'tinyimagenet':
+        model = resnet18(name='Local')
 
     # split up GPUs
     num_gpus = torch.cuda.device_count()
@@ -184,12 +187,30 @@ def run(rank, size):
         test_time = time.time() - t
 
         # evaluate accuracy on poison test data
+        # asrs = []
         poison_accs = []
         distributions = []
-        for poison_test_loader in poison_test_loaders:
-            poison_acc, distribution = test_accuracy_poison(model, poison, poison_test_loader, adv_index=args.adv_list[0])
-            poison_accs.append(poison_acc)
-            distributions.append(distribution)
+        if args.adv_mode == 'all2000' or args.adv_mode == 'zero2000':
+            if epoch % 200 == 0:
+                for i, poison_test_loader in enumerate(poison_test_loaders):
+                    poison_acc, distribution = test_accuracy_poison(model, poison, args.poison_label_swap[i], poison_test_loader, adv_index=args.adv_list[0])
+                    # asrs.append(asr)
+                    poison_accs.append(poison_acc)
+                    distributions.append(distribution)
+        elif args.adv_mode == 'all-mnist':
+            if epoch % 5 == 0:
+                for i, poison_test_loader in enumerate(poison_test_loaders):
+                    poison_acc, distribution = test_accuracy_poison(model, poison, args.poison_label_swap[i], poison_test_loader, adv_index=args.adv_list[0])
+                    # asrs.append(asr)
+                    poison_accs.append(poison_acc)
+                    distributions.append(distribution)
+        else:
+            for i, poison_test_loader in enumerate(poison_test_loaders):
+                poison_acc, distribution = test_accuracy_poison(model, poison, args.poison_label_swap[i], poison_test_loader, adv_index=args.adv_list[0])
+                # asrs.append(asr)
+                poison_accs.append(poison_acc)
+                distributions.append(distribution)
+        
         # evaluate validation accuracy at the end of each epoch
         # val_acc = test_accuracy(model, val_loader)
 
@@ -204,6 +225,7 @@ def run(rank, size):
         print("rank: %d, epoch: %.3f, loss: %.3f, train_acc: %.3f, test_loss: %.3f, comp time: %.3f, "
               "epoch time: %.3f" % (rank, epoch, losses.avg, top1.avg, t_loss, comp_time, epoch_time))
         print('poison accs: [{}]'.format(', '.join([str(x) for x in poison_accs])))
+        # print('asr: [{}]'.format(', '.join([str(x) for x in asrs])))
         recorder.add_new(comp_time, comm_time, epoch_time, (time.time() - init_time)-test_time,
                          top1.avg, poison_accs, distributions, losses.avg, t_loss)
         # reset recorders
@@ -226,6 +248,13 @@ def run(rank, size):
     sync_allreduce(model, size, MPI.COMM_WORLD)
     test_acc = test_accuracy(model, test_loader)
     print("rank %d: Test Accuracy %.3f" % (rank, test_acc))
+    all_test_acc =MPI.COMM_WORLD.gather(test_acc, root=0)
+    if rank == 0:
+        saveFolderName = args.outputFolder + '/' + 'DBA-' + str(args.graph) + '-' + args.name + '-' + str(args.epoch)
+        test_acc_file = os.path.join(saveFolderName, 'test_accuracies.txt')
+        with open(test_acc_file, 'w') as f:
+            for acc in all_test_acc:
+                f.write("%.3f\n" % (acc))
 
 # adv_list = [17, 33, 77, 11]
 # adv_epoch = [[203], [205], [207], [209]]
@@ -237,9 +266,17 @@ def is_adversary(rank, epoch, adv_list, adv_epoch):
                     return True
         elif args.adv_mode == 'all':
             return True
+        elif args.adv_mode == 'all-mnist':
+            if epoch >= 25:
+                return True
+        elif args.adv_mode == 'all2000':
+            if epoch >= 100:
+                return True
         elif args.adv_mode == 'alter':
             if epoch % args.attack_interval == 0:
                 return True
+        elif args.adv_mode == 'zero2000':
+            return False
     return False
 
 def update_learning_rate(optimizer, epoch, drop, epochs_drop, decay_epoch, itr=None, itr_per_epoch=None):

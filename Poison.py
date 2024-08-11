@@ -95,7 +95,7 @@ class Poison:
             poison_patterns = self.poison_patterns[index_in_adv_list]
         
         # process CIFAR10 and tiny image net
-        if self.args.dataset == "cifar10":
+        if self.args.dataset == "cifar10" or self.args.dataset == "tinyimagenet":
             for i in range(0,len(poison_patterns)):
                 pos = poison_patterns[i]
                 image[0][pos[0]][pos[1]] = 1
