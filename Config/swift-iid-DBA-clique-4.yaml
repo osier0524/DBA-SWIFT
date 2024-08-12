@@ -3,9 +3,9 @@ description: SWIFT # experiment description
 model: "res" # model name: res/VGG/wrn
 comm_style: "swift" # baseline communicator
 resSize: 18 # res net size
-lr: 0.1 # learning rate to start from (if not customLR then lr always 0.1)
+lr: 0.5 # learning rate to start from (if not customLR then lr always 0.1)
 momentum: 0.9 # momentum
-epoch: 200 #200 # total epoch
+epoch: 3001 #200 # total epoch
 bs: 32 # batch size on each worker
 noniid: 0 # use non iid data or not
 degree_noniid: 0 # how distributed are labels (0 is random)
@@ -14,7 +14,7 @@ unordered_epochs: 1 # calculate consensus after the first n models
 
 # Poisoning arguments
 adv_list: [1, 20, 21, 22] # list of adversaries
-adv_mode: "regular"
+adv_mode: "all2000"
 adv_method: "DBA"
 attack_interval: 3
 # Single shot
