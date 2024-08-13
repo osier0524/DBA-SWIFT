@@ -1,4 +1,4 @@
-name: "swift-iid-DBA-datasets-ring10-all" # experiment name
+name: "swift-iid-DBA-datasets-ring10-all-test" # experiment name
 description: SWIFT # experiment description
 model: "res" # model name: res/VGG/wrn
 comm_style: "swift" # baseline communicator
@@ -64,4 +64,4 @@ outputFolder: "/home/bhui/bohan/DBA-SWIFT/Output" # save folder
 randomSeed: 9000 # random seed
 customLR: 1 # custom learning rate strategy, 1 if using multi-step
 
-# mpirun --oversubscribe -np 20 python Train.py --config Config/swift-iid-DBA-ring-1-global-200-10nodes-dataset.yaml --randomSeed 100
+# mpirun --oversubscribe -np 10 python Train.py --config Config/swift-iid-DBA-ring-1-global-200-10nodes-dataset.yaml --randomSeed 100
