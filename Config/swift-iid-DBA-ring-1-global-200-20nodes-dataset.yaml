@@ -1,4 +1,4 @@
-name: "swift-iid-DBA-datasets-ring20-all-test" # experiment name
+name: "swift-iid-DBA-datasets-ring20-all" # experiment name
 description: SWIFT # experiment description
 model: "res" # model name: res/VGG/wrn
 comm_style: "swift" # baseline communicator

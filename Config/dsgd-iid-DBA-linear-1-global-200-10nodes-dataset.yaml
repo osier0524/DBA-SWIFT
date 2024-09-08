@@ -42,7 +42,7 @@ i1: 1 # i1 comm set, number of local updates no averaging
 i2: 1 # i2 comm set, number of d-sgd updates
 sgd_steps: 1 # baseline sgd steps per worker
 num_clusters: 1 # number of clusters in graph
-graph: "ring" # graph topology
+graph: "linear" # graph topology
 warmup: false # use lr warmup or not
 nesterov: false # use nesterov momentum or not
 dataset: "cifar10" # the dataset

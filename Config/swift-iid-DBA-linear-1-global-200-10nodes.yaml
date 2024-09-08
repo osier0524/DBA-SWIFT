@@ -1,4 +1,4 @@
-name: "swift-iid-DBA-datasets-linear10-all" # experiment name
+name: "swift-iid-DBA-datasets-linear10-all-test" # experiment name
 description: SWIFT # experiment description
 model: "res" # model name: res/VGG/wrn
 comm_style: "swift" # baseline communicator
@@ -13,7 +13,7 @@ weight_type: "swift" # how do workers average with each other
 unordered_epochs: 1 # calculate consensus after the first n models
 
 # Poisoning arguments
-adv_list: [1] # list of adversaries
+adv_list: [0] # list of adversaries
 adv_mode: "all"
 adv_method: "DBA"
 attack_interval: 3
@@ -64,4 +64,4 @@ outputFolder: "/home/bhui/bohan/DBA-SWIFT/Output" # save folder
 randomSeed: 9000 # random seed
 customLR: 1 # custom learning rate strategy, 1 if using multi-step
 
-# mpirun --oversubscribe -np 20 python Train.py --config Config/swift-iid-DBA-linear-1-global-200.yaml --randomSeed 100
+# mpirun --oversubscribe -np 10 python Train.py --config Config/swift-iid-DBA-linear-1-global-200-10nodes.yaml --randomSeed 200
