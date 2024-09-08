@@ -293,13 +293,12 @@ def denormalize_results(results, graph, graph_size, start_node=0):
         denormalized_results.append([denormalized_prediction, round(denormalized_groud_truth)])
     return denormalized_results
 
-def run(adv_root_dir='Sequences/adversarial', clean_root_dir='Sequences/clean', model_path='model.pth', is_binary=False, is_regression=False, graph='linear', graph_size=8, seq_range=None):
+def run(adv_root_dir='Sequences/adversarial', clean_root_dir='Sequences/clean', model_path='model.pth', is_binary=False, is_regression=False, graph='linear', graph_size=8, seq_range=None, num_epochs=500):
     # Hyperparameters
     input_dim = 1
     hidden_dim = 100
     num_layers = 1
     output_dim = 9
-    num_epochs = 500
     learning_rate = 0.01
 
     # Load data
