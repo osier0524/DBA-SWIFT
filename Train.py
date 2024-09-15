@@ -248,6 +248,8 @@ def run(rank, size):
     sync_allreduce(model, size, MPI.COMM_WORLD)
     test_acc = test_accuracy(model, test_loader)
     print("rank %d: Test Accuracy %.3f" % (rank, test_acc))
+    # if rank == 5:
+    #     torch.save(model.state_dict(), args.outputFolder + '/models/' + args.name + '_rank5.pth')
     all_test_acc =MPI.COMM_WORLD.gather(test_acc, root=0)
     if rank == 0:
         saveFolderName = args.outputFolder + '/' + 'DBA-' + str(args.graph) + '-' + args.name + '-' + str(args.epoch)
