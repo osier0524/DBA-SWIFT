@@ -252,7 +252,7 @@ def run(rank, size):
     #     torch.save(model.state_dict(), args.outputFolder + '/models/' + args.name + '_rank5.pth')
     all_test_acc =MPI.COMM_WORLD.gather(test_acc, root=0)
     if rank == 0:
-        saveFolderName = args.outputFolder + '/' + 'DBA-' + str(args.graph) + '-' + args.name + '-' + str(args.epoch)
+        saveFolderName = args.outputFolder + '/' + 'DBA-' + str(args.graph) + '-' + args.name + '-' + str(args.randomSeed)
         test_acc_file = os.path.join(saveFolderName, 'test_accuracies.txt')
         with open(test_acc_file, 'w') as f:
             for acc in all_test_acc:

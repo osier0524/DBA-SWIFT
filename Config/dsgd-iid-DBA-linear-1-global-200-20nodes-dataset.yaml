@@ -1,4 +1,4 @@
-name: "dsgd-iid-DBA-dataset-linear20-all" # experiment name
+name: "dsgd-iid-DBA-dataset-linear20-all-test" # experiment name
 description: DSGD # experiment description
 model: "res" # model name: res/VGG/wrn
 comm_style: "dsgd" # baseline communicator
