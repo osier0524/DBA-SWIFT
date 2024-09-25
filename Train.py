@@ -235,6 +235,9 @@ def run(rank, size):
 
         # recorder.save_parameters(model, epoch)
 
+    # Save model to output folder
+    # if rank == 0:
+    #     recorder.save_parameters(model, args.epoch)
     # Save data to output folder
     recorder.save_to_file()
 
