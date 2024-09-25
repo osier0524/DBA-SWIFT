@@ -236,10 +236,11 @@ def run(rank, size):
         # recorder.save_parameters(model, epoch)
 
     # Save model to output folder
-    if rank == 0 and args.dataset == 'mnist':
-        # models_path = './models' + '/' + args.name + '_rank0.pth'
-        # torch.save(model.state_dict(), models_path)
-        recorder.save_parameters(model, args.epoch)
+    # if rank == 0 and args.dataset == 'mnist':
+    #     # models_path = './models' + '/' + args.name + '_rank0.pth'
+    #     # torch.save(model.state_dict(), models_path)
+    #     recorder.save_parameters(model, args.epoch)
+    
     # Save data to output folder
     recorder.save_to_file()
 
