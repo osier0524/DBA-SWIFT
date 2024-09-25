@@ -1,4 +1,4 @@
-name: "swift-iid-DBA-mnist-4-1g3l" # experiment name
+name: "swift-iid-DBA-mnist-4-1g3l-get_model" # experiment name
 description: SWIFT # experiment description
 model: "res" # model name: res/VGG/wrn
 comm_style: "swift" # baseline communicator
